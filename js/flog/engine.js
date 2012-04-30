@@ -36,19 +36,41 @@ Flog.RayTracer.Engine.prototype = {
     },
     
     renderScene: function(scene, canvas){
+        this.renderPartialScene(scene, canvas,
+            0, this.options.canvasHeight,
+            0, this.options.canvasWidth);
+    },
+
+    renderPartialScene: function(scene, canvas, k0, kf) {
         /* Get canvas */    
         this.canvas = canvas.getContext("2d");
-        
+
         var canvasHeight = this.options.canvasHeight;
         var canvasWidth = this.options.canvasWidth;
 
-        for(var y=0; y < canvasHeight; y++){
-            for(var x=0; x < canvasWidth; x++){
-                var yp = y * 1.0 / canvasHeight * 2 - 1;
-                var xp = x * 1.0 / canvasWidth * 2 - 1;
-                var ray = scene.camera.getRay(xp, yp);
-                this.setPixel(x, y, this.getPixelColor(ray, scene));
-            }
+        /* k = (y * height) + x */
+
+        var buffer = [];
+        for(var k=k0; k < kf; k++) {
+            var y = Math.floor(k / canvasHeight);
+            var x = k - (y * canvasHeight);
+            var yp = y * 1.0 / canvasHeight * 2 - 1;
+            var xp = x * 1.0 / canvasWidth * 2 - 1;
+            var ray = scene.camera.getRay(xp, yp);
+            var pix = this.getPixelColor(ray, scene);
+            this.setPixel(x, y, pix);
+            buffer.push(pix);
+        }
+        return buffer;
+    },
+
+    updateCanvasFromBuffer: function(buffer, k0, kf) {
+        var canvasHeight = this.options.canvasHeight;
+
+        for(var k=k0; k < kf; k++) {
+          var y = Math.floor(k % canvasHeight);
+          var x = k - (y * canvasHeight);
+          this.setPixel(x, y, buffer[k - k0]);
         }
     },
     

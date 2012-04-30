@@ -1,135 +1,159 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-        <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-                <title>DRay</title>
-                <script type="text/javascript" src="js/prototype.js"></script>
-                <script type="text/javascript" src="js/flog/color.js"></script>
-                <script type="text/javascript" src="js/flog/light.js"></script>
-                <script type="text/javascript" src="js/flog/vector.js"></script>
-                <script type="text/javascript" src="js/flog/ray.js"></script>
-                <script type="text/javascript" src="js/flog/scene.js"></script>
-                <script type="text/javascript" src="js/flog/material/basematerial.js"></script>
-                <script type="text/javascript" src="js/flog/material/solid.js"></script>
-                <script type="text/javascript" src="js/flog/material/chessboard.js"></script>
-                <script type="text/javascript" src="js/flog/shape/baseshape.js"></script>
-                <script type="text/javascript" src="js/flog/shape/sphere.js"></script>
-                <script type="text/javascript" src="js/flog/shape/plane.js"></script>
-                <script type="text/javascript" src="js/flog/intersectioninfo.js"></script>
-                <script type="text/javascript" src="js/flog/camera.js"></script>
-                <script type="text/javascript" src="js/flog/background.js"></script>
-                <script type="text/javascript" src="js/flog/engine.js"></script>
+  <head>
+  <title>DRay</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <script type="text/javascript" src="js/bridge.js"></script>
+  <script type="text/javascript" src="js/prototype.js"></script>
+  <script type="text/javascript" src="js/flog/color.js"></script>
+  <script type="text/javascript" src="js/flog/light.js"></script>
+  <script type="text/javascript" src="js/flog/vector.js"></script>
+  <script type="text/javascript" src="js/flog/ray.js"></script>
+  <script type="text/javascript" src="js/flog/scene.js"></script>
+  <script type="text/javascript" src="js/flog/material/basematerial.js"></script>
+  <script type="text/javascript" src="js/flog/material/solid.js"></script>
+  <script type="text/javascript" src="js/flog/material/chessboard.js"></script>
+  <script type="text/javascript" src="js/flog/shape/baseshape.js"></script>
+  <script type="text/javascript" src="js/flog/shape/sphere.js"></script>
+  <script type="text/javascript" src="js/flog/shape/plane.js"></script>
+  <script type="text/javascript" src="js/flog/intersectioninfo.js"></script>
+  <script type="text/javascript" src="js/flog/camera.js"></script>
+  <script type="text/javascript" src="js/flog/background.js"></script>
+  <script type="text/javascript" src="js/flog/engine.js"></script>
 
 <script type="text/javascript">
-function renderScene(){ 
-    var scene = new Flog.RayTracer.Scene();
+function renderScene() { 
+  var scene = new Flog.RayTracer.Scene();
+  var bridge = new Bridge({apiKey:'abcdefgh'});
 
-    scene.camera = new Flog.RayTracer.Camera(
-        new Flog.RayTracer.Vector(0, 0, -15),
-        new Flog.RayTracer.Vector(-0.2, 0, 5),
-        new Flog.RayTracer.Vector(0, 1, 0)
-    );
+  scene.camera = new Flog.RayTracer.Camera(
+    new Flog.RayTracer.Vector(0, 0, -15),
+    new Flog.RayTracer.Vector(-0.2, 0, 5),
+    new Flog.RayTracer.Vector(0, 1, 0)
+  );
 
-    scene.background = new Flog.RayTracer.Background(
-        new Flog.RayTracer.Color(0.5, 0.5, 0.5),
-        0.4
-    );
+  scene.background = new Flog.RayTracer.Background(
+    new Flog.RayTracer.Color(0.5, 0.5, 0.5),
+    0.4
+  );
 
-    var sphere = new Flog.RayTracer.Shape.Sphere(
-        new Flog.RayTracer.Vector(-1.5, 1.5, 2),
-        1.5,
-        new Flog.RayTracer.Material.Solid(
-            new Flog.RayTracer.Color(0,0.5,0.5),
-            0.3,
-            0.0,
-            0.0,
-            2.0
-        )
-    );
+  var sphere = new Flog.RayTracer.Shape.Sphere(
+    new Flog.RayTracer.Vector(-1.5, 1.5, 2),
+    1.5,
+    new Flog.RayTracer.Material.Solid(
+      new Flog.RayTracer.Color(0,0.5,0.5),
+      0.3,
+      0.0,
+      0.0,
+      2.0
+    )
+  );
 
-    var sphere1 = new Flog.RayTracer.Shape.Sphere(
-        new Flog.RayTracer.Vector(1, 0.25, 1),
-        0.5,
-        new Flog.RayTracer.Material.Solid(
-            new Flog.RayTracer.Color(0.9,0.9,0.9),
-            0.1,
-            0.0,
-            0.0,
-            1.5
-        )
-    );
+  var sphere1 = new Flog.RayTracer.Shape.Sphere(
+    new Flog.RayTracer.Vector(1, 0.25, 1),
+    0.5,
+    new Flog.RayTracer.Material.Solid(
+      new Flog.RayTracer.Color(0.9,0.9,0.9),
+      0.1,
+      0.0,
+      0.0,
+      1.5
+    )
+  );
 
-    var plane = new Flog.RayTracer.Shape.Plane(
-        new Flog.RayTracer.Vector(0.1, 0.9, -0.5).normalize(),
-        1.2,
-        new Flog.RayTracer.Material.Chessboard(
-                new Flog.RayTracer.Color(1,1,1),
-                new Flog.RayTracer.Color(0,0,0),
-                0.2,
-                0.0,
-                1.0,
-                0.7
-        )
-    );
+  var plane = new Flog.RayTracer.Shape.Plane(
+    new Flog.RayTracer.Vector(0.1, 0.9, -0.5).normalize(),
+    1.2,
+    new Flog.RayTracer.Material.Chessboard(
+      new Flog.RayTracer.Color(1,1,1),
+      new Flog.RayTracer.Color(0,0,0),
+      0.2,
+      0.0,
+      1.0,
+      0.7
+    )
+  );
 
-    scene.shapes.push(plane);
-    scene.shapes.push(sphere);
-    scene.shapes.push(sphere1);
+  scene.shapes.push(plane);
+  scene.shapes.push(sphere);
+  scene.shapes.push(sphere1);
 
-    var light = new Flog.RayTracer.Light(
-        new Flog.RayTracer.Vector(5, 10, -1),
-        new Flog.RayTracer.Color(0.8, 0.8, 0.8)
-    );
+  var light = new Flog.RayTracer.Light(
+    new Flog.RayTracer.Vector(5, 10, -1),
+    new Flog.RayTracer.Color(0.8, 0.8, 0.8)
+  );
 
-    var light1 = new Flog.RayTracer.Light(
-        new Flog.RayTracer.Vector(-3, 5, -15),
-        new Flog.RayTracer.Color(0.8, 0.8, 0.8),
-        100
-    );
+  var light1 = new Flog.RayTracer.Light(
+    new Flog.RayTracer.Vector(-3, 5, -15),
+    new Flog.RayTracer.Color(0.8, 0.8, 0.8),
+    100
+  );
 
-    scene.lights.push(light);
-    scene.lights.push(light1);
+  scene.lights.push(light);
+  scene.lights.push(light1);
 
-    var raytracer = new Flog.RayTracer.Engine(
-        {
-            canvasWidth: 800,
-            canvasHeight: 600,
-            pixelWidth: 1,
-            pixelHeight: 1,
-            "renderDiffuse": true,
-            "renderHighlights": true,
-            "renderShadows": true,
-            "renderReflections": true,
-            "rayDepth": 2
-        }
-    );
-
-    var can = $("canvas");
-    while (true) {
-        raytracer.renderScene(scene, can, 0);
+  var raytracer = new Flog.RayTracer.Engine(
+    {
+      canvasWidth: 800,
+      canvasHeight: 600,
+      pixelWidth: 1,
+      pixelHeight: 1,
+      "renderDiffuse": true,
+      "renderHighlights": true,
+      "renderShadows": true,
+      "renderReflections": true,
+      "rayDepth": 2
     }
+  );
+
+  var can = $("canvas");
+  var dray_channel = null;
+
+  var worker = function(tick, k0, kf, on_done) {
+    console.log('Got work from server.');
+    buffer = raytracer.renderPartialScene(scene, can, k0, kf);
+    dray_channel.update(tick, buffer, k0, kf);
+    on_done();
+    console.log('Finished!');
+  };
+
+  var chan_handler = {
+    update: function(tick, buffer, k0, kf) {
+      console.log('Updating canvas with a chunk.');
+      raytracer.updateCanvasFromBuffer(buffer, k0, kf);
+    },
+  };
+
+  bridge.getService('dray', function(dray) {
+    dray.join(worker, chan_handler, function(channel, name) {
+      dray_channel = channel;
+      setInterval(function() {
+	dray.get_chunk();
+      }, 200);
+    });
+  });
 }
 
 window.addEventListener("load", renderScene, false);
 </script>
 
 <style type="text/css">
-        body {
-                background: black;
-        }
+  body {
+  background: black;
+  }
 
-        #canvas {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                background: #000;
-        }
+  #canvas {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background: #000;
+  }
 </style>
 
 </head>
 
 <body>
-        <canvas id="canvas" height="600" width="800"></canvas>
+  <canvas id="canvas" height="600" width="800"></canvas>
 </body>
 
 </html>
