@@ -21,6 +21,13 @@ class DRay(object):
             kf = k0 + kdelta
             yield map(int, (k0, kf))
 
+    def constant_chunks(self, nr):
+        kdelta = 10000
+        for k in range(nr):
+            k0 = k * kdelta
+            kf = k0 + kdelta
+            yield (k0, kf)
+
     def join(self, worker, chan_handler, callback):
         '''
         - worker(tick, k0, kf, on_done)
@@ -45,6 +52,7 @@ class DRay(object):
         self.nr_scheduled = len(self.workers)
         self.nr_completed = 0
         work = self.canvas_chunks(self.nr_scheduled)
+        # work = self.constant_chunks(self.nr_scheduled)
 
         def on_done():
             self.nr_completed += 1

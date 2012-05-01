@@ -37,8 +37,7 @@ Flog.RayTracer.Engine.prototype = {
     
     renderScene: function(scene, canvas){
         this.renderPartialScene(scene, canvas,
-            0, this.options.canvasHeight,
-            0, this.options.canvasWidth);
+            0, this.options.canvasHeight * this.options.canvasWidth);
     },
 
     renderPartialScene: function(scene, canvas, k0, kf) {
@@ -59,7 +58,9 @@ Flog.RayTracer.Engine.prototype = {
             var ray = scene.camera.getRay(xp, yp);
             var pix = this.getPixelColor(ray, scene);
             this.setPixel(x, y, pix);
-            buffer.push(pix);
+            buffer.push(pix.red);
+            buffer.push(pix.green);
+            buffer.push(pix.blue);
         }
         return buffer;
     },
@@ -68,10 +69,17 @@ Flog.RayTracer.Engine.prototype = {
         var canvasHeight = this.options.canvasHeight;
         var canvasWidth = this.options.canvasWidth;
 
+        var i=0;
         for(var k=k0; k < kf; k++) {
           var y = Math.floor(k / canvasWidth);
           var x = k - (y * canvasWidth);
-          this.setPixel(x, y, buffer[k - k0]);
+          var pix = {
+            'red': buffer[i],
+            'green': buffer[i+1],
+            'blue': buffer[i+2]
+          };
+          this.setPixel(x, y, pix);
+          i = i + 3;
         }
     },
     

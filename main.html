@@ -121,6 +121,7 @@ function renderScene() {
   var chan_handler = {
     update: function(tick, buffer, k0, kf) {
       console.log('Updating canvas with a chunk.');
+      console.log([k0, kf]);
       raytracer.updateCanvasFromBuffer(buffer, k0, kf);
     },
   };
@@ -130,7 +131,7 @@ function renderScene() {
       dray_channel = channel;
       setInterval(function() {
 	dray.get_chunk();
-      }, 200);
+      }, 500);
     });
   });
 }
@@ -140,14 +141,15 @@ window.addEventListener("load", renderScene, false);
 
 <style type="text/css">
   body {
-  background: black;
+	background: black;
   }
 
   #canvas {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  background: #000;
+	display: block;
+	margin-top: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	background: #000;
   }
 </style>
 
