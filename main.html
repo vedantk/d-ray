@@ -92,9 +92,10 @@ function renderScene() {
   scene.lights.push(light);
   scene.lights.push(light1);
 
+  /* XXX: Only works for square images. */
   var raytracer = new Flog.RayTracer.Engine(
     {
-      canvasWidth: 800,
+      canvasWidth: 600,
       canvasHeight: 600,
       pixelWidth: 1,
       pixelHeight: 1,
@@ -153,7 +154,7 @@ window.addEventListener("load", renderScene, false);
 </head>
 
 <body>
-  <canvas id="canvas" height="600" width="800"></canvas>
+  <canvas id="canvas" height="600" width="600"></canvas>
 </body>
 
 </html>

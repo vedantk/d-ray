@@ -48,12 +48,12 @@ Flog.RayTracer.Engine.prototype = {
         var canvasHeight = this.options.canvasHeight;
         var canvasWidth = this.options.canvasWidth;
 
-        /* k = (y * height) + x */
+        /* k = (y * width) + x */
 
         var buffer = [];
         for(var k=k0; k < kf; k++) {
-            var y = Math.floor(k / canvasHeight);
-            var x = k - (y * canvasHeight);
+            var y = Math.floor(k / canvasWidth);
+            var x = k - (y * canvasWidth);
             var yp = y * 1.0 / canvasHeight * 2 - 1;
             var xp = x * 1.0 / canvasWidth * 2 - 1;
             var ray = scene.camera.getRay(xp, yp);
@@ -66,10 +66,11 @@ Flog.RayTracer.Engine.prototype = {
 
     updateCanvasFromBuffer: function(buffer, k0, kf) {
         var canvasHeight = this.options.canvasHeight;
+        var canvasWidth = this.options.canvasWidth;
 
         for(var k=k0; k < kf; k++) {
-          var y = Math.floor(k % canvasHeight);
-          var x = k - (y * canvasHeight);
+          var y = Math.floor(k / canvasWidth);
+          var x = k - (y * canvasWidth);
           this.setPixel(x, y, buffer[k - k0]);
         }
     },

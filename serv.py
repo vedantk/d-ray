@@ -57,7 +57,7 @@ class DRay(object):
         print('Ticked once.')
 
 if __name__ == '__main__':
-    dray = DRay(800 * 600)
+    dray = DRay(600 * 600)
     bridge = Bridge(api_key='abcdefgh')
     bridge.publish_service('dray', dray)
     bridge.connect()
