@@ -12,6 +12,8 @@ class DRay(object):
         self.workers = []
         self.nr_scheduled = 0
         self.nr_completed = 0
+        self.work_done = {}
+        self.misses = 0
 
     def canvas_chunks(self, nr):
         frac = 1.0 / nr
@@ -43,23 +45,37 @@ class DRay(object):
         
     def get_chunk(self):
         if self.nr_completed < self.nr_scheduled or len(self.workers) == 0:
+            self.misses += 1
+            if self.misses > 150:
+                print('Too many misses! Issuing new tick.')
+                self.misses = 0
+                self.nr_completed = self.nr_scheduled
+                for slot, done in self.work_done.items():
+                    if not done:
+                        print('Dead worker: %s.' % (slot))
+                        self.workers.pop(slot)
+                return
+
             print('get_chunk: Jobs remain outstanding.')
             return
         
         print('New tick.')
 
+        self.misses = 0
         self.tick += 1
         self.nr_scheduled = len(self.workers)
         self.nr_completed = 0
         # work = self.canvas_chunks(self.nr_scheduled)
         work = self.constant_chunks(self.nr_scheduled)
-
-        def on_done():
+        
+        def on_done(k0):
             self.nr_completed += 1
+            self.work_done[k0] = (None, True)
             print('Status = %f%%' % (self.nr_completed / self.nr_scheduled))
 
         for (i, (k0, kf)) in enumerate(work):
             print((k0, kf))
+            self.work_done[k0] = (i, False)
             self.workers[i](self.tick, k0, kf, on_done)
         
         print('Ticked once.')

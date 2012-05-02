@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-  <title>DRay</title>
+  <title>d-ray</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <script type="text/javascript" src="js/bridge.js"></script>
   <script type="text/javascript" src="js/prototype.js"></script>
@@ -108,20 +108,21 @@ function renderScene() {
   );
 
   var can = $("canvas");
+  var tty = $("status");
   var dray_channel = null;
 
   var worker = function(tick, k0, kf, on_done) {
-    console.log('Got work from server.');
+    tty.innerText = 'Got work from server.';
     buffer = raytracer.renderPartialScene(scene, can, k0, kf);
     dray_channel.update(tick, buffer, k0, kf);
-    on_done();
-    console.log('Finished!');
+    on_done(k0);
+    tty.innerText = 'Finished!';
   };
 
   var chan_handler = {
     update: function(tick, buffer, k0, kf) {
-      console.log('Updating canvas with a chunk.');
-      console.log([k0, kf]);
+      tty.innerText = 'Updating canvas with a chunk.';
+      tty.innerText = [k0, kf].toString();
       raytracer.updateCanvasFromBuffer(buffer, k0, kf);
     },
   };
@@ -146,10 +147,17 @@ window.addEventListener("load", renderScene, false);
 
   #canvas {
 	display: block;
-	margin-top: 30px;
+	margin-top: 20px;
 	margin-left: auto;
 	margin-right: auto;
 	background: #000;
+  }
+
+  #status {
+ 	text-align: center;
+	font-family: monospace;
+	font-color: black;
+	background-color: white;
   }
 </style>
 
@@ -157,6 +165,7 @@ window.addEventListener("load", renderScene, false);
 
 <body>
   <canvas id="canvas" height="600" width="600"></canvas>
+  <p id="status"><a href="https://github.com/vedantk/d-ray">d-ray</a></p>
 </body>
 
 </html>
