@@ -22,7 +22,7 @@ class DRay(object):
             yield map(int, (k0, kf))
 
     def constant_chunks(self, nr):
-        kdelta = 10000
+        kdelta = 12000
         for k in range(nr):
             k0 = k * kdelta
             kf = k0 + kdelta
@@ -51,8 +51,8 @@ class DRay(object):
         self.tick += 1
         self.nr_scheduled = len(self.workers)
         self.nr_completed = 0
-        work = self.canvas_chunks(self.nr_scheduled)
-        # work = self.constant_chunks(self.nr_scheduled)
+        # work = self.canvas_chunks(self.nr_scheduled)
+        work = self.constant_chunks(self.nr_scheduled)
 
         def on_done():
             self.nr_completed += 1

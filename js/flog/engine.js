@@ -4,6 +4,14 @@ if(typeof(Flog.RayTracer) == 'undefined') Flog.RayTracer = {};
 
 Flog.RayTracer.Engine = Class.create();
 
+var color_components = function(color) {
+  return "" + Math.floor(color.red*255) + "," + Math.floor(color.green*255) + "," + Math.floor(color.blue*255);
+};
+
+var color_to_string = function(components) {
+  return "rgb(" + components + ")";
+};
+
 Flog.RayTracer.Engine.prototype = {
     canvas: null, /* 2d context we can render to */
     
@@ -27,14 +35,18 @@ Flog.RayTracer.Engine.prototype = {
     },
     
     setPixel: function(x, y, color){
+        this.setPixelColor(x, y, color.toString());
+    },
+
+    setPixelColor: function(x, y, color) {
         var pxW, pxH;
         pxW = this.options.pixelWidth;
         pxH = this.options.pixelHeight;
 
-        this.canvas.fillStyle = color.toString();
+        this.canvas.fillStyle = color;
         this.canvas.fillRect (x * pxW, y * pxH, pxW, pxH);
     },
-    
+
     renderScene: function(scene, canvas){
         this.renderPartialScene(scene, canvas,
             0, this.options.canvasHeight * this.options.canvasWidth);
@@ -58,9 +70,7 @@ Flog.RayTracer.Engine.prototype = {
             var ray = scene.camera.getRay(xp, yp);
             var pix = this.getPixelColor(ray, scene);
             this.setPixel(x, y, pix);
-            buffer.push(pix.red);
-            buffer.push(pix.green);
-            buffer.push(pix.blue);
+            buffer.push(color_components(pix));
         }
         return buffer;
     },
@@ -73,13 +83,8 @@ Flog.RayTracer.Engine.prototype = {
         for(var k=k0; k < kf; k++) {
           var y = Math.floor(k / canvasWidth);
           var x = k - (y * canvasWidth);
-          var pix = {
-            'red': buffer[i],
-            'green': buffer[i+1],
-            'blue': buffer[i+2]
-          };
-          this.setPixel(x, y, pix);
-          i = i + 3;
+          this.setPixelColor(x, y, color_to_string(buffer[i]));
+          i++; 
         }
     },
     
